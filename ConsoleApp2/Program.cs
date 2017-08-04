@@ -11,13 +11,14 @@ namespace ConsoleApp2
     class Program
     {
         public static byte[] bt = new byte[1024];
+        public static byte[] buffer = new byte[1024];
+
         static bool isrec = false;
 
         static void Main(string[] args)
         {
             Console.WriteLine("server start: ....");
-            string ip = "127.0.0.1";
-            byte[] buffer = new byte[1024];
+            string ip = "192.168.15.156";
 
             IPAddress ipAddress = IPAddress.Parse(ip);
             Socket a = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -30,10 +31,10 @@ namespace ConsoleApp2
 
             Console.WriteLine("accept a client: ....");
 
-            Thread pp = new Thread(Program.sendmessage);
+            Thread pp = new Thread(Program.acceptmessage);
             pp.Start(b);
 
-
+            /*
             for (int i = 10; i < 30; i++)
             {
                 Console.WriteLine(i);
@@ -48,25 +49,36 @@ namespace ConsoleApp2
                 }
 
             }
-
+            */
+            
             Thread newsendmsg = new Thread(Program.sendmsg);
             newsendmsg.Start(b);
+            
 
             Console.ReadKey();
             b.Close();
             a.Close();
         }
 
-        public static void sendmessage(object s)
+        public static void acceptmessage(object s)
         {
-            isrec = true;
-            Socket b = (Socket)s;
-            int rec = b.Receive(bt, 4, 0);
-            int recint = Class1.ByteArraytoInt(bt);
-            Console.WriteLine(recint);
-            Thread.Sleep(50);
+
+            while (true)
+            {
+                if (isrec = true)
+                {
+                    Socket b = (Socket)s;
+                    int rec = b.Receive(bt, 12, 0);
+                    string recint = Class1.ByteArraytoInt(bt);
+                    Console.WriteLine(recint);
+                    Thread.Sleep(50);
+                    isrec = false;
+                }
+
+            }
         }
 
+        
         public static void sendmsg(object s)
         {
             Socket b = (Socket)s;
@@ -78,6 +90,7 @@ namespace ConsoleApp2
                     try
                     {
                         b.Send(bt);
+                        isrec = true;
                     }
                     catch (Exception e)
                     {
@@ -90,5 +103,6 @@ namespace ConsoleApp2
                 }
             }
         }
+        
     }
 }

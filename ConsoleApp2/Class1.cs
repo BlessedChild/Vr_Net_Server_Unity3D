@@ -28,16 +28,33 @@ namespace ConsoleApp2
         }
 
         //将int类型网络字节转化为主机字节算法
-        public static int ByteArraytoInt(byte[] b)
+        public static string ByteArraytoInt(byte[] b)
         {
             int iOutcome = 0;
+            int iOutcome1 = 0;
+            int iOutcome2= 0;
             byte bLoop;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 12; i++)
             {
-                bLoop = b[i];
-                iOutcome += (bLoop & 0xff) << (8 * i);
+                if(i < 4)
+                {
+                    bLoop = b[i];
+                    iOutcome += (bLoop & 0xff) << (8 * i);
+                }
+                if(i > 3 && i < 8)
+                {
+                    bLoop = b[i];
+                    iOutcome1 += (bLoop & 0xff) << (8 * i);
+                }
+                if(i > 7 && i <12)
+                {
+                    bLoop = b[i];
+                    iOutcome2 += (bLoop & 0xff) << (8 * i);
+                }
+
             }
-            return iOutcome;
+            string re= iOutcome.ToString() + "/" + iOutcome1.ToString() + "/" + iOutcome2.ToString();
+            return re;
         }
 
         //将short类型的网络字节转化为主机字节算法
@@ -52,5 +69,7 @@ namespace ConsoleApp2
             }
             return iOutcome;
         }
+
+
     }
 }
