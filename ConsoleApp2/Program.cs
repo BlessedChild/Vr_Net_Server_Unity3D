@@ -16,6 +16,7 @@ namespace ConsoleApp2
         private static Socket listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         private static Thread[] acceptClientList = new Thread[2];
         private static Thread[] sendClientList = new Thread[2];
+        private static int acchose = 0;
 
 
         static bool isrec = false;
@@ -52,11 +53,23 @@ namespace ConsoleApp2
                 for(int i = 0; i < 2; i++)
                 {
                     Socket s = listenSocket.Accept(); //a.Accept()。执行这一句的时候，程序就在这个地方等待，直到有新的连接请求的时候程序才会执行下一句。这是同步执行，当然也可以异步执行
-                    sendClientList[i] = new Thread(sendmsg);
-                    sendClientList[i].Start(s);
-                    acceptClientList[i] = new Thread(acceptmessage);
-                    acceptClientList[i].Start(s);
-                    Console.WriteLine("来自" + s.LocalEndPoint.ToString() + "连接了");
+                    if(i == 0)
+                    {
+                        sendClientList[i] = new Thread(sendmsg);
+                        sendClientList[i].Start(s);
+                        acceptClientList[i] = new Thread(acceptmessage);
+                        acceptClientList[i].Start(s);
+                        Console.WriteLine("来自" + s.LocalEndPoint.ToString() + "连接了");
+                    }
+                    if(i == 1)
+                    {
+                        sendClientList[i] = new Thread(sendmsg);
+                        sendClientList[i].Start(s);
+                        acceptClientList[i] = new Thread(acceptmessage1);
+                        acceptClientList[i].Start(s);
+                        Console.WriteLine("来自" + s.LocalEndPoint.ToString() + "连接了");
+                    }
+
                 }
             }
         }
@@ -71,12 +84,9 @@ namespace ConsoleApp2
                     try
                     {
                         int rec = b.Receive(bttemp, 20, 0);
-                        for (int i = 0; i < 2; i++)
+                        for (int v = 0; v < 20; v++)
                         {
-                            for (int v = 0; v < 20; v++)
-                            {
-                                bt[i][v] = bttemp[v];
-                            }
+                            bt[0][v] = bttemp[v];
                         }
                         string[] recint = Class1.ServerToClient_string(bt);
                         Console.WriteLine(recint[0]);
@@ -92,7 +102,35 @@ namespace ConsoleApp2
             }
         }
 
-        
+        public static void acceptmessage1(object s)
+        {
+            Socket b = (Socket)s;
+            while (true)
+            {
+                if (isrec = true)
+                {
+                    try
+                    {
+                        int rec = b.Receive(bttemp, 20, 0);
+                        for (int v = 0; v < 20; v++)
+                        {
+                            bt[1][v] = bttemp[v];
+                        }
+                        string[] recint = Class1.ServerToClient_string(bt);
+                        Console.WriteLine(recint[0]);
+                        Console.WriteLine(recint[1]);
+                        Thread.Sleep(10);
+                        isrec = false;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+            }
+        }
+
+
         public static void sendmsg(object s) //传入当前 所有已连接的Socket 数组
         {
             Socket ss = (Socket)s;
