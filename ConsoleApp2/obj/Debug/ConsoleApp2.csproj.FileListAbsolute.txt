@@ -1,0 +1,5 @@
+C:\Users\BlessedChild\Desktop\Vr_Net_Server_Unity3D\Vr_Net_Server_Unity3D\ConsoleApp2\bin\Debug\ConsoleApp2.exe
+C:\Users\BlessedChild\Desktop\Vr_Net_Server_Unity3D\Vr_Net_Server_Unity3D\ConsoleApp2\bin\Debug\ConsoleApp2.pdb
+C:\Users\BlessedChild\Desktop\Vr_Net_Server_Unity3D\Vr_Net_Server_Unity3D\ConsoleApp2\obj\Debug\ConsoleApp2.csprojResolveAssemblyReference.cache
+C:\Users\BlessedChild\Desktop\Vr_Net_Server_Unity3D\Vr_Net_Server_Unity3D\ConsoleApp2\obj\Debug\ConsoleApp2.exe
+C:\Users\BlessedChild\Desktop\Vr_Net_Server_Unity3D\Vr_Net_Server_Unity3D\ConsoleApp2\obj\Debug\ConsoleApp2.pdb

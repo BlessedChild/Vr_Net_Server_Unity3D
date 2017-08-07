@@ -10,99 +10,109 @@ namespace ConsoleApp2
 {
     class Program
     {
-        public static byte[] bt = new byte[1024];
-        public static byte[] buffer = new byte[1024];
+        public static byte[][] bt = new byte[2][] {new byte[1024], new byte[1024] }; //有[]多个byte[1024]
+        public static byte[] bttemp = new byte[1024];
+        public static byte[] handlerbuffer = new byte[1024];
+        private static Socket listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        private static Thread[] acceptClientList = new Thread[2];
+        private static Thread[] sendClientList = new Thread[2];
+
 
         static bool isrec = false;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("server start: ....");
-            string ip = "192.168.15.156";
-
-            IPAddress ipAddress = IPAddress.Parse(ip);
-            Socket a = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            IPEndPoint ipe = new IPEndPoint(ipAddress, 6666);
-            a.Bind(ipe);
-            a.Listen(5);
-            Socket b = a.Accept();
-
-
-            Console.WriteLine("accept a client: ....");
-
-            Thread pp = new Thread(Program.acceptmessage);
-            pp.Start(b);
-
-            /*
-            for (int i = 10; i < 30; i++)
+            byte[] ToClient = new byte[40];
+            byte bLoop;
+            for (int ib = 0; ib < 2; ib++)
             {
-                Console.WriteLine(i);
-                byte[] position = Class1.InttoByteArray(i);
-                try
+                for (int i = 0; i < 20; i++)
                 {
-                    b.Send(position);
+                    bLoop = bt[ib][i];
+                    ToClient[ib * 20 + i] += bLoop;
                 }
-                catch(Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-
             }
-            */
+            Thread service = new Thread(Program.listen_socket);
+            service.Start();
             
-            Thread newsendmsg = new Thread(Program.sendmsg);
-            newsendmsg.Start(b);
-            
-
             Console.ReadKey();
-            b.Close();
-            a.Close();
+        }
+
+        public static void listen_socket()
+        {
+            string ip = "192.168.15.28";
+            Console.WriteLine("server:" + ip + " start working: ....");
+            IPAddress ipAddress = IPAddress.Parse(ip);
+            IPEndPoint ipe = new IPEndPoint(ipAddress, 6666);
+            listenSocket.Bind(ipe);
+            listenSocket.Listen(2);
+
+            while (true)
+            {
+                for(int i = 0; i < 2; i++)
+                {
+                    Socket s = listenSocket.Accept(); //a.Accept()。执行这一句的时候，程序就在这个地方等待，直到有新的连接请求的时候程序才会执行下一句。这是同步执行，当然也可以异步执行
+                    sendClientList[i] = new Thread(sendmsg);
+                    sendClientList[i].Start(s);
+                    acceptClientList[i] = new Thread(acceptmessage);
+                    acceptClientList[i].Start(s);
+                    Console.WriteLine("来自" + s.LocalEndPoint.ToString() + "连接了");
+                }
+            }
         }
 
         public static void acceptmessage(object s)
         {
-
+            Socket b = (Socket)s;
             while (true)
             {
                 if (isrec = true)
                 {
-                    Socket b = (Socket)s;
-                    int rec = b.Receive(bt, 12, 0);
-                    string recint = Class1.ByteArraytoInt(bt);
-                    Console.WriteLine(recint);
-                    Thread.Sleep(50);
-                    isrec = false;
-                }
-
-            }
-        }
-
-        
-        public static void sendmsg(object s)
-        {
-            Socket b = (Socket)s;
-
-            while (true)
-            {
-                if (!isrec)
-                {
                     try
                     {
-                        b.Send(bt);
-                        isrec = true;
+                        int rec = b.Receive(bttemp, 20, 0);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            for (int v = 0; v < 20; v++)
+                            {
+                                bt[i][v] = bttemp[v];
+                            }
+                        }
+                        string[] recint = Class1.ServerToClient_string(bt);
+                        Console.WriteLine(recint[0]);
+                        Console.WriteLine(recint[1]);
+                        Thread.Sleep(10);
+                        isrec = false;
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
                     }
                 }
-                if(!b.Connected)
+            }
+        }
+
+        
+        public static void sendmsg(object s) //传入当前 所有已连接的Socket 数组
+        {
+            Socket ss = (Socket)s;
+            while (true)
+            {
+                if (!isrec)
                 {
-                    Console.WriteLine("client is lost");
+                    try
+                    {
+                        handlerbuffer = Class1.ServerToClient_Byte(bt);
+                        ss.Send(handlerbuffer);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                    isrec = true;
+                    Thread.Sleep(20);
                 }
             }
         }
-        
     }
 }

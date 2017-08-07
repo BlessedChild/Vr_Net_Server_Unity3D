@@ -33,8 +33,10 @@ namespace ConsoleApp2
             int iOutcome = 0;
             int iOutcome1 = 0;
             int iOutcome2= 0;
+            int iOutcome3= 0;
+            int iOutcome4= 0;
             byte bLoop;
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 20; i++)
             {
                 if(i < 4)
                 {
@@ -51,11 +53,22 @@ namespace ConsoleApp2
                     bLoop = b[i];
                     iOutcome2 += (bLoop & 0xff) << (8 * i);
                 }
+                if (i > 11 && i < 16)
+                {
+                    bLoop = b[i];
+                    iOutcome3 += (bLoop & 0xff) << (8 * i);
+                }
+                if (i > 15 && i < 20)
+                {
+                    bLoop = b[i];
+                    iOutcome4 += (bLoop & 0xff) << (8 * i);
+                }
 
             }
-            string re= iOutcome.ToString() + "/" + iOutcome1.ToString() + "/" + iOutcome2.ToString();
+            string re= iOutcome.ToString() + "/" + iOutcome1.ToString() + "/" + iOutcome2.ToString() + "/" + iOutcome3.ToString() + "/" + iOutcome4.ToString();
             return re;
         }
+
 
         //将short类型的网络字节转化为主机字节算法
         private static short ByteArraytoShort(byte[] b)
@@ -70,6 +83,72 @@ namespace ConsoleApp2
             return iOutcome;
         }
 
+        public static string[] ServerToClient_string(byte[][] b)
+        {
+            if(b.Length > 0)
+            {
+                int[][] iOutcome = new int[2][]{new int[5], new int[5]};
+                byte bLoop;
+                for (int ib = 0; ib < b.Length; ib++)
+                {
+                    for (int i = 0; i < 20; i++)
+                    {
+                        if (i < 4)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][0] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 3 && i < 8)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][1] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 7 && i < 12)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][2] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 11 && i < 16)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][3] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 15 && i < 20)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][4] += (bLoop & 0xff) << (8 * i);
+                        }
+                    }
+                }
 
+                string[] re = new string[2];
+                re[0] = iOutcome[0][0].ToString() + "/" + iOutcome[0][1].ToString() + "/" + iOutcome[0][2].ToString() + "/" + iOutcome[0][3].ToString() + "/" + iOutcome[0][4].ToString();
+                re[1] = iOutcome[1][0].ToString() + "/" + iOutcome[1][1].ToString() + "/" + iOutcome[1][2].ToString() + "/" + iOutcome[1][3].ToString() + "/" + iOutcome[1][4].ToString();
+                return re;
+            }
+            else
+            {
+                string[] res = new string[2];
+                res[0] = "no messages";
+                return res;
+            }
+        }
+
+        public static byte[] ServerToClient_Byte(byte[][] b)
+        {
+            byte[] ToClient = new byte[40];
+            byte bLoop;
+
+            for (int ib = 0; ib < b.Length; ib++)
+            {
+                for (int i = 0; i < 20; i++)
+                {
+                    bLoop = b[ib][i];
+                    ToClient[ib * 20 + i] += bLoop;
+                }
+            }
+
+            return ToClient;
+        }
     }
 }
