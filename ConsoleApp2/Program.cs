@@ -23,14 +23,14 @@ namespace ConsoleApp2
 
         static void Main(string[] args)
         {
-            byte[] ToClient = new byte[40];
+            byte[] ToClient = new byte[64];
             byte bLoop;
             for (int ib = 0; ib < 2; ib++)
             {
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 32; i++)
                 {
                     bLoop = bt[ib][i];
-                    ToClient[ib * 20 + i] += bLoop;
+                    ToClient[ib * 32 + i] += bLoop;
                 }
             }
             Thread service = new Thread(Program.listen_socket);
@@ -74,6 +74,7 @@ namespace ConsoleApp2
             }
         }
 
+        
         public static void acceptmessage(object s)
         {
             Socket b = (Socket)s;
@@ -83,8 +84,8 @@ namespace ConsoleApp2
                 {
                     try
                     {
-                        int rec = b.Receive(bttemp, 20, 0);
-                        for (int v = 0; v < 20; v++)
+                        int rec = b.Receive(bttemp, 32, 0);
+                        for (int v = 0; v < 32; v++)
                         {
                             bt[0][v] = bttemp[v];
                         }
@@ -111,8 +112,8 @@ namespace ConsoleApp2
                 {
                     try
                     {
-                        int rec = b.Receive(bttemp, 20, 0);
-                        for (int v = 0; v < 20; v++)
+                        int rec = b.Receive(bttemp, 32, 0);
+                        for (int v = 0; v < 32; v++)
                         {
                             bt[1][v] = bttemp[v];
                         }

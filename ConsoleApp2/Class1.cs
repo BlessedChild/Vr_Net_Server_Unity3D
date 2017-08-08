@@ -35,8 +35,11 @@ namespace ConsoleApp2
             int iOutcome2= 0;
             int iOutcome3= 0;
             int iOutcome4= 0;
+            int iOutcome5= 0;
+            int iOutcome6= 0;
+            int iOutcome7= 0;
             byte bLoop;
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 32; i++)
             {
                 if(i < 4)
                 {
@@ -63,9 +66,24 @@ namespace ConsoleApp2
                     bLoop = b[i];
                     iOutcome4 += (bLoop & 0xff) << (8 * i);
                 }
+                if (i > 19 && i < 24)
+                {
+                    bLoop = b[i];
+                    iOutcome5 += (bLoop & 0xff) << (8 * i);
+                }
+                if (i > 23 && i < 28)
+                {
+                    bLoop = b[i];
+                    iOutcome6 += (bLoop & 0xff) << (8 * i);
+                }
+                if (i > 27 && i < 32)
+                {
+                    bLoop = b[i];
+                    iOutcome7 += (bLoop & 0xff) << (8 * i);
+                }
 
             }
-            string re= iOutcome.ToString() + "/" + iOutcome1.ToString() + "/" + iOutcome2.ToString() + "/" + iOutcome3.ToString() + "/" + iOutcome4.ToString();
+            string re= iOutcome.ToString() + "/" + iOutcome1.ToString() + "/" + iOutcome2.ToString() + "/" + iOutcome3.ToString() + "/" + iOutcome4.ToString() + "/" + iOutcome5.ToString() + "/" + iOutcome6.ToString() + "/" + iOutcome7.ToString();
             return re;
         }
 
@@ -87,11 +105,11 @@ namespace ConsoleApp2
         {
             if(b.Length > 0)
             {
-                int[][] iOutcome = new int[2][]{new int[5], new int[5]};
+                int[][] iOutcome = new int[2][]{new int[8], new int[8]};
                 byte bLoop;
                 for (int ib = 0; ib < b.Length; ib++)
                 {
-                    for (int i = 0; i < 20; i++)
+                    for (int i = 0; i < 32; i++)
                     {
                         if (i < 4)
                         {
@@ -118,12 +136,27 @@ namespace ConsoleApp2
                             bLoop = b[ib][i];
                             iOutcome[ib][4] += (bLoop & 0xff) << (8 * i);
                         }
+                        if (i > 19 && i < 24)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][5] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 23 && i < 28)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][6] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 27 && i < 32)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][7] += (bLoop & 0xff) << (8 * i);
+                        }
                     }
                 }
 
                 string[] re = new string[2];
-                re[0] = iOutcome[0][0].ToString() + "/" + iOutcome[0][1].ToString() + "/" + iOutcome[0][2].ToString() + "/" + iOutcome[0][3].ToString() + "/" + iOutcome[0][4].ToString();
-                re[1] = iOutcome[1][0].ToString() + "/" + iOutcome[1][1].ToString() + "/" + iOutcome[1][2].ToString() + "/" + iOutcome[1][3].ToString() + "/" + iOutcome[1][4].ToString();
+                re[0] = iOutcome[0][0].ToString() + "/" + iOutcome[0][1].ToString() + "/" + iOutcome[0][2].ToString() + "/" + iOutcome[0][3].ToString() + "/" + iOutcome[0][4].ToString() + "/" + iOutcome[0][5].ToString() + "/" + iOutcome[0][6].ToString() + "/" + iOutcome[0][7].ToString();
+                re[1] = iOutcome[1][0].ToString() + "/" + iOutcome[1][1].ToString() + "/" + iOutcome[1][2].ToString() + "/" + iOutcome[1][3].ToString() + "/" + iOutcome[1][4].ToString() + "/" + iOutcome[1][5].ToString() + "/" + iOutcome[1][6].ToString() + "/" + iOutcome[1][7].ToString();
                 return re;
             }
             else
@@ -136,15 +169,15 @@ namespace ConsoleApp2
 
         public static byte[] ServerToClient_Byte(byte[][] b)
         {
-            byte[] ToClient = new byte[40];
+            byte[] ToClient = new byte[64];
             byte bLoop;
 
             for (int ib = 0; ib < b.Length; ib++)
             {
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 32; i++)
                 {
                     bLoop = b[ib][i];
-                    ToClient[ib * 20 + i] += bLoop;
+                    ToClient[ib * 32 + i] += bLoop;
                 }
             }
 
