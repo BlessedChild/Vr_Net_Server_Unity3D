@@ -105,11 +105,11 @@ namespace ConsoleApp2
         {
             if(b.Length > 0)
             {
-                int[][] iOutcome = new int[2][]{new int[8], new int[8]};
+                int[][] iOutcome = new int[2][]{new int[14], new int[14]};
                 byte bLoop;
                 for (int ib = 0; ib < b.Length; ib++)
                 {
-                    for (int i = 0; i < 32; i++)
+                    for (int i = 0; i < 56; i++)
                     {
                         if (i < 4)
                         {
@@ -151,6 +151,36 @@ namespace ConsoleApp2
                             bLoop = b[ib][i];
                             iOutcome[ib][7] += (bLoop & 0xff) << (8 * i);
                         }
+                        if (i > 31 && i < 36)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][8] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 35 && i < 40)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][9] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 39 && i < 44)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][10] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 43 && i < 48)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][11] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 47 && i < 52)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][12] += (bLoop & 0xff) << (8 * i);
+                        }
+                        if (i > 51 && i < 56)
+                        {
+                            bLoop = b[ib][i];
+                            iOutcome[ib][13] += (bLoop & 0xff) << (8 * i);
+                        }
                     }
                 }
 
@@ -169,15 +199,15 @@ namespace ConsoleApp2
 
         public static byte[] ServerToClient_Byte(byte[][] b)
         {
-            byte[] ToClient = new byte[64];
+            byte[] ToClient = new byte[112];
             byte bLoop;
 
             for (int ib = 0; ib < b.Length; ib++)
             {
-                for (int i = 0; i < 32; i++)
+                for (int i = 0; i < 56; i++)
                 {
                     bLoop = b[ib][i];
-                    ToClient[ib * 32 + i] += bLoop;
+                    ToClient[ib * 56 + i] += bLoop;
                 }
             }
 

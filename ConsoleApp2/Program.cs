@@ -23,14 +23,14 @@ namespace ConsoleApp2
 
         static void Main(string[] args)
         {
-            byte[] ToClient = new byte[64];
+            byte[] ToClient = new byte[112];
             byte bLoop;
             for (int ib = 0; ib < 2; ib++)
             {
-                for (int i = 0; i < 32; i++)
+                for (int i = 0; i < 56; i++)
                 {
                     bLoop = bt[ib][i];
-                    ToClient[ib * 32 + i] += bLoop;
+                    ToClient[ib * 56 + i] += bLoop;
                 }
             }
             Thread service = new Thread(Program.listen_socket);
@@ -41,7 +41,7 @@ namespace ConsoleApp2
 
         public static void listen_socket()
         {
-            string ip = "192.168.15.28";
+            string ip = "192.168.15.155";
             Console.WriteLine("server:" + ip + " start working: ....");
             IPAddress ipAddress = IPAddress.Parse(ip);
             IPEndPoint ipe = new IPEndPoint(ipAddress, 6666);
@@ -84,8 +84,8 @@ namespace ConsoleApp2
                 {
                     try
                     {
-                        int rec = b.Receive(bttemp, 32, 0);
-                        for (int v = 0; v < 32; v++)
+                        int rec = b.Receive(bttemp, 56, 0);
+                        for (int v = 0; v < 56; v++)
                         {
                             bt[0][v] = bttemp[v];
                         }
@@ -112,8 +112,8 @@ namespace ConsoleApp2
                 {
                     try
                     {
-                        int rec = b.Receive(bttemp, 32, 0);
-                        for (int v = 0; v < 32; v++)
+                        int rec = b.Receive(bttemp, 56, 0);
+                        for (int v = 0; v < 56; v++)
                         {
                             bt[1][v] = bttemp[v];
                         }
